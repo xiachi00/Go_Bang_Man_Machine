@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> 人机五子棋大战 </title>
+        <style>
+            .big-button {
+                font-size: 4em; /* 增大字体大小 */
+                padding: 1em 2em; /* 增大内边距 */
+                border-radius: 1em; /* 增加按钮圆角 */
+                background-color: #ec5833; /* 设置背景颜色 */
+                color: white; /* 设置文本颜色 */
+            }
+            #container {
+                overflow: hidden;
+            }
+
+            .item {
+                float: left;
+                height: 100px;
+                background-color: blue;
+            }
+            .item1 {
+                width: 100%;
+                background-color: red;
+            }
+            .item2, .item3 {
+                width: 50%;
+            }
+
+        </style>
+    </head>
+    <body>
+        <h2 id = "h2" style="text-align: center"> 敢不敢来一把？</h2>
+        
+        <button class="big-button" id = "btn" onclick="showMessage() "> 接受挑战 </button>
+        <script>
+            // 弹出消息框
+            function showMessage() {
+                // 删除标题 按钮
+
+                const h2 = document.getElementById("h2");
+                h2.parentNode.removeChild(h2);
+
+                const btn = document.getElementById("btn");
+                btn.parentNode.removeChild(btn);
+
+                const container = document.querySelector("#container");
+
+                const item1 = document.createElement("div");
+                item1.className = "item item1";
+                container.appendChild(item1); // 把item1添加到container中
+
+                const item2 = document.createElement("div");
+                item2.className = "item item2";
+                container.appendChild(item2); // 把item2添加到container中
+
+                const item3 = document.createElement("div");
+                item3.className = "item item3";
+                container.appendChild(item3); // 把item3添加到container中
+
+                item1.appendChild(item2); // 把item2添加到item1中
+                item1.appendChild(item3); // 把item3添加到item1中
+
+                // 设置样式
+                container.style.overflown = "hidden";
+                item1.style.float = "left";
+                item1.style.width = "100%";
+                item1.style.height = "100px";
+                item1.style.backgroundColor = "red";
+
+                item2.style.float = "left";
+                item2.style.width = "50%";
+                item2.style.backgroundColor = "blue";
+
+                item3.style.float = "left";
+                item3.style.width = "50%";
+                item3.style.backgroundColor = "blue";
+            }
+            
+        </script>
+    </body>
+</html>
