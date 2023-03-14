@@ -1,9 +1,11 @@
 #include "global.h"
+#include "dtbs.h"
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <iostream>
 #include <cstring>
+#include <cstdlib>
 using namespace std;
 
 
@@ -122,7 +124,7 @@ void request_format() {
     if (pos != string::npos) {
         req.type = url.substr(pos, url.size() - pos);          // type
     } else {
-        req.type = "data";
+        req.type = "not_file";
     }
     vector<string> args = split(url_args[1], '&');
     vector<string> key_value;                                  
@@ -177,21 +179,66 @@ void analysis_req_info() {
     rsp.status_msg = "OK";
 
     if (req.type == ".html") {
-        rsp.body = cat_text_file(req.url);
+        rsp.body = cat_html_file(req.url);
+    } else if (req.type == ".js") {
+        rsp.body = cat_js_file(req.url);
     } else if (req.type == ".ico" || req.type == ".jpg" || req.type == ".jpeg" || req.type == ".png") {
         rsp.body = cat_binary_file(req.url);
-    } else if (req.type == "data") {
-
+    } else if (req.type == "not_file") {
+        if (req.url == "/ask_for_new_board") {
+            int new_code = rand();
+            rsp.body = new_code;
+            DTBS::getDefault->Open("../database");
+            DTBS::getDefault->Put(new_code, create_Board());
+            DTBS::getDefault->Close();
+        } else if (req.url == "/load_board") {
+            int code = stoi(req.args["code"]);
+            DTBS::getDefault->Open("../database");
+            Board B = DTBS::getDefault->Get(code);
+            for (int i = 0; i < 15; i++)
+                for (int j = 0; j < 15; j++)
+                    rsp.body += char(B.board[i][j] + '0');
+            DTBS::getDefault->Close();
+        } else if (req.url == "/data") {
+            int code = stoi(req.args["code"]);
+            string sex = req.args["sex"];
+            DTBS::getDefault->Open("../database");
+            Board B = DTBS::getDefault->Get(code);
+            DTBS::getDefault->Close();
+            if (sex == "boy") {
+                analysis_greedy(B);
+            } else {
+                analysis_alpha_beta(B);
+            }
+        }
     }
-    
-
 
 
     DEBUG("LEAVE analysis_req_info");
 }
 
-string cat_text_file(string path) {
-    string filename = "../resource" + path;
+string cat_html_file(string path) {
+    string filename = "../HTML" + path;
+    cout << "Request for " << filename << endl;
+    string line, content = "";
+    ifstream fs(filename);
+    if (fs.is_open()) {
+        while (getline(fs, line)) {
+            content += line + '\n';
+        }
+        fs.close();
+    } else {
+        fs.close();
+        cout << "Error: Cannot open html file" << endl;
+        exit(-1);
+    }
+    line.clear();
+    string().swap(line);
+    return content;
+}
+
+string cat_js_file(string path) {
+    string filename = "../JS" + path;
     cout << "Request for " << filename << endl;
     string line, content = "";
     ifstream fs(filename);
@@ -211,7 +258,7 @@ string cat_text_file(string path) {
 }
 
 string cat_binary_file(string path) {
-    string filename = "../resource" + path;
+    string filename = "../IMG" + path;
     cout << "Request for " << filename << endl;
     string line, content = "";
     ifstream fs(filename, ios::in|ios::binary|ios::ate);

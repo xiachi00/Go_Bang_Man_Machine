@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> 对局界面 </title>
+        <style>
+            .cell {
+                width: 30px;
+                height: 30px;
+                border: 1px solid black;
+                text-align: center;
+                vertical-align: middle;
+            }
+
+            .none {
+                background-color: rgb(132, 211, 235);
+            }
+
+            .black {
+                background-color: black;
+            }
+
+            .white {
+                background-color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <table id="chessboard"></table>
+        <script>
+            var board_number = localStorage.getItem("boy");
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://150.158.146.95:8888/load_board?code="+board_number);
+            xhr.send();
+            xhr.onreadystatechange = function() {
+                if (this.readyState === 4 && this.status === 200) {
+                    var text = xhr.responseText;
+                    var table = document.getElementById("chessboard");
+                    var k = 0;
+                    for (var i = 0; i < 15; i++) {
+                        var tr = document.createElement("tr");
+                        for (var j = 0; j < 15; j++) {
+                            var td = document.createElement("td");
+                            td.className = "cell";
+                            if (text[k] == "0") {
+                                td.classList.add('none');
+                            } else if (text[k] == "1") {
+                                td.classList.add('black');
+                            } else {
+                                td.classList.add('white');
+                            }
+                            tr.appendChild(td);
+                        }
+                        table.appendChild(tr);
+                    }
+                }
+            };
+
+            let squares = document.querySelectorAll('td');
+
+            // 在棋盘上下棋
+            squares.forEach((td, index) => {
+                td.addEventListener('click', () => {
+                    if (td.classList.contains('black') || td.classList.contains('white')) {
+                        return;
+                    } else {
+                        td.classList.add('black');
+                        let xhr = new XMLHttpRequest();
+                        xhr.open("GET", "http://150.158.146.95:8888/data?index="+index+"&code="+board_number+"&sex=girl", true); // 定义请求
+                        xhr.send(); // 发送请求
+
+                        xhr.onreadystatechange = function() {
+                            if (this.readyState == 4 && this.status == 200) {
+                                var str = xhr.responseText;
+                                if (isNaN(str[0])) {
+                                    localStorage.removeItem("girl");
+                                    eval(str);
+                                } else {
+                                    var pos = parseInt(str);
+                                    squares.item(pos).classList.add('white');
+                                }
+                            }
+                        };
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

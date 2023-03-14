@@ -64,7 +64,7 @@
 
                 //创建左侧图片元素
                 var imgLeft = document.createElement("img");
-                imgLeft.src = "https://cdn.pixabay.com/animation/2022/08/15/08/47/08-47-41-408_512.gif";
+                imgLeft.src = "http://150.158.146.95:8888/IMG/boy.webp";
                 imgLeft.style.float = "left";
                 imgLeft.style.width = "50%";
                 imgLeft.style.height = "100%";
@@ -96,7 +96,7 @@
                     }
                     localStorage.setItem("boy", value);
                     let xhr = new XMLHttpRequest();
-                    xhr.open("GET", "http://150.158.146.95:8888/game?board=2&sex=boy", true);
+                    xhr.open("GET", "http://150.158.146.95:8888/boy.html", true);
                     xhr.send();
                     xhr.onreadystatechange = function() {
                         if (this.readyState === 4 && this.status === 200) {
@@ -108,7 +108,7 @@
 
 
                 var imgRight = document.createElement("img");
-                imgRight.src = "https://cdn.pixabay.com/animation/2022/08/15/08/47/08-47-39-132_512.gif";
+                imgRight.src = "http://150.158.146.95:8888/IMG/girl.webp";
                 imgRight.style.float = "right";
                 imgRight.style.width = "50%";
                 imgRight.style.height = "100%";
@@ -141,7 +141,7 @@
                     }
                     localStorage.setItem("girl", value);
                     let xhr = new XMLHttpRequest();
-                    xhr.open("GET", "http://150.158.146.95:8888/game?board=2&sex=girl", true);
+                    xhr.open("GET", "http://150.158.146.95:8888/girl.html", true);
                     xhr.send();
                     xhr.onreadystatechange = function() {
                         if (this.readyState === 4 && this.status === 200) {
@@ -156,10 +156,10 @@
 
 
 
-                var text = document.createElement("h2");
-                text.style="text-align: center";
-                text.innerHTML = "请选择你的对手";
-                //将弹出框添加到网页中
+                // var text = document.createElement("h2");
+                // text.style="text-align: center";
+                // text.innerHTML = "请选择你的对手";
+                // //将弹出框添加到网页中
                 document.body.appendChild(popupBox);
             }
         </script>

@@ -1,25 +1,27 @@
-#include <vector>
+#include "board.h"
+using namespace std;
 
-class Board {
-public:
-    static short SIZE;
-    short cnt;
-    std::vector<std::vector<short>> board;
-};
+Board::SIZE = 15;
 
-// 落子
-short judge(short x, short y, short player) {
+Board create_Board() {
+    Board new_board = Board();
+    new_board.cnt = 0;
+    new_board.board = board = vector<vector<short>>(SIZE, std::vector<short>(SIZE));
+    return new_board;
+}
+
+short place_and_judge(Board& B, short x, short y, short player) {
     DEBUG("ENTER JUDGE");
 
-    cnt += 1;
+    B.cnt += 1;
+    auto &board = B.board;
     board[x][y] = player;
     short L_R, U_D, LU_RD, LD_RU, i, j;
     L_R = U_D = LU_RD = LD_RU = 1;
+    short SIZE = 15;
 
     for (j = y - 1; j >= 0 && board[x][j] == player; j--) L_R += 1;        
     for (j = y + 1; j < SIZE && board[x][j] == player; j++) L_R += 1;
-    mx = max(mx, x), my = max(my, y);
-    lx = min(lx, x), ly = min(ly, y);
 
     for (i = x - 1; i >= 0 && board[i][y] == player; i--) U_D += 1;
     for (i = x + 1; i < SIZE && board[i][y] == player; i++) U_D += 1;
@@ -31,7 +33,9 @@ short judge(short x, short y, short player) {
     for (i = x - 1, j = y + 1; i >= 0 && j < SIZE && board[i][j] == player; i--, j++) LD_RU += 1;
 
     for (i = 0; i < 19; i++) cout << "--";
+    cout << endl;
     for (i = 0; i < 19; i++) cout << "  ";
+    cout << endl;
     for (i = 0; i < 19; i++) cout << "  ";
     cout << endl;
     for (i = 0; i < SIZE; i++) {
@@ -41,7 +45,9 @@ short judge(short x, short y, short player) {
         cout << "   |" << endl;
     }
     for (i = 0; i < 19; i++) cout << "  ";
+    cout << endl;
     for (i = 0; i < 19; i++) cout << "  ";
+    cout << endl;
     for (i = 0; i < 19; i++) cout << "--";
     cout << endl;
         
@@ -51,9 +57,17 @@ short judge(short x, short y, short player) {
 
     DEBUG("ENTER JUDGE");
 
-    if (max_length < 5) return 0;
     if (max_length >= 5) return player;
-    if (cnt == SIZE * SIZE) return -1;
+    if (B.cnt == SIZE * SIZE) return -1;
+    return 0;
 }
 
+// 贪心AI
+void analysis_greedy(Board &B) {
 
+}
+
+// 高级AI
+void analysis_alpha_beta(Board &B) {
+    
+}

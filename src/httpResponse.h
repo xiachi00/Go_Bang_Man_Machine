@@ -18,6 +18,18 @@ public:
     friend std::ostream & operator << (std::ostream& os, const httpResponse &obj); // 只输出头
 };
 
+std::string httpResponse::package() {
+    std::string result;
+    result += version + " " + status_code + " " + status_msg + "\r\n";
+    for (auto& header : headers) {
+        result += header.first + ": " + header.second + "\r\n";
+    }
+    result += "Content-Length: " + std::to_string(body.length()) + "\r\n";
+    result += "\r\n";
+    result += body;
+    return result;
+}
+
 void httpResponse::clear() {
     version.clear();
     status_code.clear();
