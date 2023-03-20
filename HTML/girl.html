@@ -64,19 +64,34 @@
                         return;
                     } else {
                         td.classList.add('black');
-                        let xhr = new XMLHttpRequest();
-                        xhr.open("GET", "http://150.158.146.95:8888/data?index="+index+"&code="+board_number+"&sex=girl", true); // 定义请求
-                        xhr.send(); // 发送请求
+                        let xhr1 = new XMLHttpRequest();
+                        let xhr2 = new XMLHttpRequest();
+                        var msg1 = "http://150.158.146.95:8888/data?index="+index+"&code="+board_number+"&sex=girl&player=1";
+                        xhr1.open("GET", msg1, true); // 定义请求
+                        xhr1.send(); // 发送请求
 
-                        xhr.onreadystatechange = function() {
+                        xhr1.onreadystatechange = function() {
                             if (this.readyState == 4 && this.status == 200) {
-                                var str = xhr.responseText;
+                                var str = xhr1.responseText;
                                 if (isNaN(str[0])) {
-                                    localStorage.removeItem("girl");
+                                    localStorage.removeItem("boy");
                                     eval(str);
                                 } else {
                                     var pos = parseInt(str);
                                     squares.item(pos).classList.add('white');
+
+                                    var msg2 = "http://150.158.146.95:8888/data?index="+pos+"&code="+board_number+"&sex=girl&player=2";
+                                    xhr2.open("GET", msg, true); // 定义请求
+                                    xhr2.send(); // 发送请求
+                                }
+                            }
+                        };
+
+                        xhr2.onreadystatechange = function() {
+                            if (this.readyState == 4 && this.status == 200) {
+                                var str = xhr1.responseText;
+                                if (str.length > 10) {
+                                    eval(str);
                                 }
                             }
                         };

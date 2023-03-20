@@ -1,11 +1,14 @@
-#include "httpRequest.h"
-#include "httpResponse.h"
+#include "http_Request.h"
+#include "http_Response.h"
+#include <cstring>
 #include <errno.h>
 
-int server_fd, client_fd;
-httpRequest req;
-httpResponse rsp;
+extern int server_fd;
+extern int client_fd;
+extern httpRequest req;
+extern httpResponse rsp;
+
 void perror_exit(const char *description);
-inline void DEBUG(string s);
-inline void DEBUG(string s1, string s2);
-inline void DEBUG(string s1, string s2, string s3);
+void DEBUG(std::string s);
+void DEBUG(std::string s1, std::string s2);
+void DEBUG(std::string s1, std::string s2, std::string s3);
